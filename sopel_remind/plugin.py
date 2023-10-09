@@ -18,6 +18,7 @@ from . import backend, config
 
 LOCK = threading.RLock()
 LOGGER = tools.get_logger('remind')
+PLUGIN_OUTPUT_PREFIX = '[remind] '
 
 
 def setup(bot: Sopel):
@@ -86,6 +87,7 @@ def migrate_builtin(from_file: str, to_file: str) -> int:
 
 
 @plugin.interval(2)
+@plugin.output_prefix(PLUGIN_OUTPUT_PREFIX)
 def reminder_job(bot: Sopel):
     """Check reminders every 2s."""
     if not bot.backend.is_connected() or not bot.connection_registered:
@@ -137,6 +139,7 @@ def reminder_job(bot: Sopel):
 @plugin.example('.in 2m30s Do something in 2.5 minutes', user_help=True)
 @plugin.example('.in 1h30m Do something in 1.5 hours', user_help=True)
 @plugin.example('.in 1h23m45s Do something in 1h, 23m and 45s', user_help=True)
+@plugin.output_prefix(PLUGIN_OUTPUT_PREFIX)
 def remind_in(bot: SopelWrapper, trigger: Trigger):
     """Set a reminder for later.
 
@@ -177,6 +180,7 @@ def remind_in(bot: SopelWrapper, trigger: Trigger):
 @plugin.example('.at 2023-06-27 Python 3.7 EOL.', user_help=True)
 @plugin.example('.at 2023-06-27 12:00:00 Python 3.7 EOL.', user_help=True)
 @plugin.example('.at 12:00:00 2023-06-27 Python 3.7 EOL.', user_help=True)
+@plugin.output_prefix(PLUGIN_OUTPUT_PREFIX)
 def remind_at(bot: SopelWrapper, trigger: Trigger):
     """Set a reminder for later using an exact (date) time (timezone aware).
 
